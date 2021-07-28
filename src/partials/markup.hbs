@@ -1,0 +1,19 @@
+{{#each response}}
+<div class="photo-card">
+  <img src="{{webformatURL}}" alt="{{tags}}" loading="lazy" />
+  <div class="info">
+    <p class="info-item">
+      <b>Likes <span class="wrap-value">{{likes}}</span></b>
+    </p>
+    <p class="info-item">
+      <b>Views <span class="wrap-value">{{views}}</span></b>
+    </p>
+    <p class="info-item">
+      <b>Comments <span class="wrap-value">{{comments}}</span></b>
+    </p>
+    <p class="info-item">
+      <b>Downloads <span class="wrap-value">{{downloads}}</span></b>
+    </p>
+  </div>
+</div>
+{{/each}}
