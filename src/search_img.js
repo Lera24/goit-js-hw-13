@@ -26,13 +26,13 @@ async function onSearchImg () {
 
     valueResponse = response.data.hits;
     resultQuantity = response.data.totalHits;
-    createMarkup();
+
+    if (!valueResponse.length) {
+        fetchErrors();
+    } createMarkup();
 };
 
 function createMarkup () {
-    if (!valueResponse.length) {
-        fetchErrors();
-    }
     markup.insertAdjacentHTML('beforeend', pictures ({response : valueResponse}));
     const successfulMessage = `Hooray! We found ${resultQuantity} images.`;
     Notiflix.Notify.success(successfulMessage);
@@ -41,6 +41,10 @@ function createMarkup () {
 const fetchErrors = (() => {
     return Notiflix.Notify.failure(errorMessage);
   });
+
+const fetchInfo = (() => {
+    return Notiflix.Notify.info(infoMessage);
+})
 
 function counter () {
     return PAGE += 1;
@@ -59,12 +63,12 @@ function clearCounter () {
     return PAGE = Number(1);
 };
 
-function hiddenBtn (elements, property) {
+function hiddenBtnInFinally (elements, property) {
     if (markup.children.length >= resultQuantity) {
-        Notiflix.Notify.info(infoMessage);
+        fetchInfo();
         return elements.classList.add(property);
    }
     return;
 }
 
-export default {onSearchImg, counter, clearCounter, query, clearMarcup, hiddenBtn};
+export default {onSearchImg, counter, clearCounter, query, clearMarcup, hiddenBtnInFinally};

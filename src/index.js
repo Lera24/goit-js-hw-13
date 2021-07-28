@@ -16,7 +16,7 @@ function onSearchApi (e) {
     loadMore.classList.add(selector);
 
     onSearchData.query(e.target.elements.searchQuery.value);
-    onSearchData.onSearchImg ();
+    onSearchData.onSearchImg();
     loadMore.classList.remove(selector);
 };
 
@@ -27,6 +27,6 @@ function showMorePictures (e) {
     e.preventDefault();
     onSearchData.counter();
     onSearchData.onSearchImg ();
-    onSearchData.hiddenBtn(loadMore, selector);
+    onSearchData.hiddenBtnInFinally(loadMore, selector);
 
 }
