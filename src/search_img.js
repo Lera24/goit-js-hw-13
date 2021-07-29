@@ -8,6 +8,7 @@ const API_KEY = '22659523-ac255ed135817256fe2f96438';
 const API_OPTIONS = 'image_type=photo&orientation=horizontal&safesearch=&true';
 
 const markup = document.querySelector('.gallery');
+const loadMore = document.querySelector('.load-more');
 
 const errorMessage = 'Sorry, there are no images matching your search query. Please try again.';
 const infoMessage = `We're sorry, but you've reached the end of search results.`;
@@ -19,23 +20,32 @@ let PAGE = '';
 
 const PER_PAGE = 40;
 
+loadMore.classList.add('button-hidden');
 
 async function onSearchImg () {
     const url = `/?key=${API_KEY}&q=${currentValue}&${API_OPTIONS}&page=${PAGE}&per_page=${PER_PAGE}`;
-    const response = await axios.get(url);
+    try {
+        const response = await axios.get(url);
 
-    valueResponse = response.data.hits;
-    resultQuantity = response.data.totalHits;
+        valueResponse = response.data.hits;
+        resultQuantity = response.data.totalHits;
 
-    if (!valueResponse.length) {
-        fetchErrors();
-    } createMarkup();
+        if (!valueResponse.length) {
+            fetchErrors();
+            return loadMore.classList.add('button-hidden');
+        }
+        createMarkup();
+        fetchMessage();
+        loadMore.classList.remove('button-hidden');
+
+    } catch {
+        fetchInfo();
+        loadMore.classList.add('button-hidden');
+    }    
 };
 
 function createMarkup () {
     markup.insertAdjacentHTML('beforeend', pictures ({response : valueResponse}));
-    const successfulMessage = `Hooray! We found ${resultQuantity} images.`;
-    Notiflix.Notify.success(successfulMessage);
 };
 
 const fetchErrors = (() => {
@@ -44,6 +54,14 @@ const fetchErrors = (() => {
 
 const fetchInfo = (() => {
     return Notiflix.Notify.info(infoMessage);
+})
+
+const fetchMessage = (() => {
+    const successfulMessage = `Hooray! We found ${resultQuantity} images.`;
+    if (!resultQuantity) {
+        return;
+    }
+    return Notiflix.Notify.success(successfulMessage);
 })
 
 function counter () {
@@ -63,12 +81,4 @@ function clearCounter () {
     return PAGE = Number(1);
 };
 
-function hiddenBtnInFinally (elements, property) {
-    if (markup.children.length >= resultQuantity) {
-        fetchInfo();
-        return elements.classList.add(property);
-   }
-    return;
-}
-
-export default {onSearchImg, counter, clearCounter, query, clearMarcup, hiddenBtnInFinally};
+export default {onSearchImg, counter, clearCounter, query, clearMarcup};
